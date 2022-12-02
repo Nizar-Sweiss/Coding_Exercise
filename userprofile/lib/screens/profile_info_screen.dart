@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:userprofile/widgets/widgets_barrel.dart';
 
 class ProfileInfoScreen extends StatefulWidget {
   const ProfileInfoScreen({super.key});
@@ -27,6 +28,30 @@ class _nameState extends State<ProfileInfoScreen> {
           child: ListView(
         children: [
           buildTopContents(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    "NAME",
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "Sp",
+                    style: TextStyle(fontSize: 25),
+                  ),
+                  Divider(
+                    thickness: 1,
+                  ),
+                  DefaultTextBox(text: "FNAME ", title: "First Name "),
+                  DefaultTextBox(text: "LNAME ", title: "Last Name "),
+                  DefaultTextBox(text: "23", title: "Age"),
+                  DefaultTextBox(text: "Email@Email.com", title: "Email"),
+                  DefaultTextBox(text: "Jordan", title: "Country"),
+                  DefaultTextBox(text: "Amman", title: "City"),
+                ]),
+          )
         ],
       )),
     );
