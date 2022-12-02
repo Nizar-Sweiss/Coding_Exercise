@@ -66,7 +66,36 @@ class _nameState extends State<EditProfileScreen> {
 
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [],
+                    children: [
+                      DefaultFormField(
+                          hint: "Enter here ... ",
+                          title: "First Name",
+                          controller: firstNameController),
+                      DefaultFormField(
+                          hint: "Enter here ... ",
+                          title: "Last Name",
+                          controller: lastNameController),
+                      DefaultFormField(
+                          hint: "Enter here ... ",
+                          title: "Display Name",
+                          controller: displayNameController),
+                      DefaultFormField(
+                          hint: "Enter here ... ",
+                          title: "Email",
+                          controller: emailController),
+                      DefaultFormField(
+                          hint: "Enter here ... ",
+                          title: "Age",
+                          controller: ageController),
+                      DefaultFormField(
+                          hint: "Enter here ... ",
+                          title: "Country",
+                          controller: countryController),
+                      DefaultFormField(
+                          hint: "Enter here ... ",
+                          title: "City",
+                          controller: cityController),
+                    ],
                   );
                 },
               ))
