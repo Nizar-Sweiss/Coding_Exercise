@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:userprofile/widgets/widgets_barrel.dart';
 
@@ -12,7 +13,8 @@ class _nameState extends State<ProfileInfoScreen> {
   final double coverHeight = 280;
 
   final double profileHeight = 150;
-
+  final Stream<QuerySnapshot> users =
+      FirebaseFirestore.instance.collection("users").snapshots();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,41 +31,66 @@ class _nameState extends State<ProfileInfoScreen> {
         children: [
           buildTopContents(),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    "NAME",
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                  ),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.edit,
-                      color: Colors.black,
-                      size: 30,
-                    ),
-                    onPressed: () {},
-                  ),
-                ],
-              ),
-              const Text(
-                "Specialty",
-                style: TextStyle(fontSize: 20),
-              ),
-              const Divider(
-                thickness: 1,
-              ),
-              DefaultTextBox(text: "FNAME ", title: "First Name "),
-              DefaultTextBox(text: "LNAME ", title: "Last Name "),
-              DefaultTextBox(text: "23", title: "Age"),
-              DefaultTextBox(text: "Email@Email.com", title: "Email"),
-              DefaultTextBox(text: "Jordan", title: "Country"),
-              DefaultTextBox(text: "City", title: "City"),
-            ]),
-          )
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: StreamBuilder<QuerySnapshot>(
+                stream: users,
+                builder: (
+                  BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot,
+                ) {
+                  if (snapshot.hasError) {
+                    return Text("Something went Wrong ");
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Text("Loading ...");
+                  }
+                  final data = snapshot.requireData;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            " ${data.docs[0]["display name"]}",
+                            style: const TextStyle(
+                                fontSize: 30, fontWeight: FontWeight.bold),
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.edit,
+                              color: Colors.black,
+                              size: 30,
+                            ),
+                            onPressed: () {},
+                          ),
+                        ],
+                      ),
+                      Text(
+                        "${data.docs[0]["major"]}",
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                      const Divider(
+                        thickness: 1,
+                      ),
+                      DefaultTextBox(
+                          text: "${data.docs[0]["first name"]}",
+                          title: "First Name "),
+                      DefaultTextBox(
+                          text: "${data.docs[0]["last name "]}",
+                          title: "Last Name "),
+                      DefaultTextBox(
+                          text: "${data.docs[0]["age"]}", title: "Age"),
+                      DefaultTextBox(
+                          text: "${data.docs[0]["email"]}", title: "Email"),
+                      DefaultTextBox(
+                          text: "${data.docs[0]["country"]}", title: "Country"),
+                      DefaultTextBox(
+                          text: "${data.docs[0]["city"]}", title: "City"),
+                    ],
+                  );
+                },
+              ))
         ],
       )),
     );
