@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:userprofile/utility/firebase_service.dart';
 import 'package:userprofile/widgets/widgets_barrel.dart';
 
 class ProfileInfoScreen extends StatefulWidget {
@@ -106,25 +107,71 @@ class _nameState extends State<ProfileInfoScreen> {
       clipBehavior: Clip.none,
       children: [
         Container(
-            margin: EdgeInsets.only(bottom: bottom), child: buildCoverImage()),
-        Positioned(top: topPosition, left: 10, child: buildProfileImage()),
+            color: const Color.fromARGB(255, 80, 80, 80),
+            margin: EdgeInsets.only(bottom: bottom),
+            child: buildCoverImage()),
+        Positioned(
+            top: topPosition,
+            left: 10,
+            child: CircleAvatar(
+              radius: 75,
+              child: buildProfileImage(),
+            )),
       ],
     );
   }
 
 // display the background cover picture
-  Widget buildCoverImage() => Container(
-        color: Colors.grey,
-        child: Image.network(
-          "https://images.pexels.com/photos/1591447/pexels-photo-1591447.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-          width: double.infinity,
-          height: coverHeight,
-          fit: BoxFit.cover,
-        ),
+  Widget buildCoverImage() => FutureBuilder(
+        future: _getImage(context, "bk1.jpg"),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return SizedBox(
+              width: double.infinity,
+              height: coverHeight,
+              child: snapshot.data,
+            );
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return SizedBox(
+              width: double.infinity,
+              height: coverHeight,
+              child: const Center(child: CircularProgressIndicator()),
+            );
+          }
+          return Container();
+        },
       );
 // display the profile picture
-  Widget buildProfileImage() => CircleAvatar(
-        radius: profileHeight / 2,
-        backgroundColor: Colors.blueGrey,
+  Widget buildProfileImage() => FutureBuilder(
+        future: _getImage(context, "pfp1.png"),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return SizedBox(
+              width: MediaQuery.of(context).size.width / 1.2,
+              height: MediaQuery.of(context).size.width / 1.2,
+              child: snapshot.data,
+            );
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return SizedBox(
+              width: MediaQuery.of(context).size.width / 1.2,
+              height: MediaQuery.of(context).size.width / 1.2,
+              child: const Center(child: CircularProgressIndicator()),
+            );
+          }
+          return Container();
+        },
       );
+  //return requested image from FireStorage
+  Future<Widget> _getImage(BuildContext context, String imageName) async {
+    late Image image;
+    await FirebaseService.loadImage(context, imageName).then((value) {
+      image = Image.network(
+        value.toString(),
+        fit: BoxFit.scaleDown,
+      );
+    });
+    return image;
+  }
 }
