@@ -16,9 +16,26 @@ class _nameState extends State<EditProfileScreen> {
   final double profileHeight = 150;
   final Stream<QuerySnapshot> users =
       FirebaseFirestore.instance.collection("users").snapshots();
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController displayNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController ageController = TextEditingController();
+  TextEditingController countryController = TextEditingController();
+  TextEditingController cityController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: CircleAvatar(
+        radius: 30,
+        child: IconButton(
+          icon: Icon(
+            Icons.done,
+            size: 30,
+          ),
+          onPressed: () {},
+        ),
+      ),
       appBar: AppBar(
         title: const Text("Edit Info"),
         //title postion in the middle of the App Bar
@@ -40,12 +57,13 @@ class _nameState extends State<EditProfileScreen> {
                   AsyncSnapshot<QuerySnapshot> snapshot,
                 ) {
                   if (snapshot.hasError) {
-                    return Text("Something went Wrong ");
+                    return const Text("Something went Wrong ");
                   }
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Text("Loading ...");
+                    return const Text("Loading ...");
                   }
                   final data = snapshot.requireData;
+
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [],
@@ -84,7 +102,7 @@ class _nameState extends State<EditProfileScreen> {
                     right: 1,
                     child: IconButton(
                         onPressed: () {},
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.add_circle,
                           color: Color.fromARGB(255, 0, 117, 207),
                           size: 40,
@@ -98,7 +116,7 @@ class _nameState extends State<EditProfileScreen> {
           top: topPosition + 20,
           child: IconButton(
               onPressed: () {},
-              icon: Icon(
+              icon: const Icon(
                 Icons.edit,
                 color: Colors.white,
                 size: 40,
