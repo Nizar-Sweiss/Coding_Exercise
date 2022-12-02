@@ -99,7 +99,5 @@ class _nameState extends State<ProfileInfoScreen> {
   Widget buildProfileImage() => CircleAvatar(
         radius: profileHeight / 2,
         backgroundColor: Colors.blueGrey,
-        backgroundImage: NetworkImage(
-            "https://lh4.googleusercontent.com/-SB4Q8oQcM9I/AAAAAAAAAAI/AAAAAAAAAAA/RgtXudsGnT0/c-rp-mo-br100/photo.jpg"),
       );
 }
