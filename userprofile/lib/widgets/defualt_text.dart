@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+/*Custom Widgets to create custom lookfor the project,
+ and and to reduce repetition of the text widget.
+ */
 class DefaultTextBox extends StatefulWidget {
   final String text;
   final String title;

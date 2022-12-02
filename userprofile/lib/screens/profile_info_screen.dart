@@ -30,27 +30,39 @@ class _nameState extends State<ProfileInfoScreen> {
           buildTopContents(),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
                     "NAME",
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                   ),
-                  Text(
-                    "Sp",
-                    style: TextStyle(fontSize: 25),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.edit,
+                      color: Colors.black,
+                      size: 30,
+                    ),
+                    onPressed: () {},
                   ),
-                  Divider(
-                    thickness: 1,
-                  ),
-                  DefaultTextBox(text: "FNAME ", title: "First Name "),
-                  DefaultTextBox(text: "LNAME ", title: "Last Name "),
-                  DefaultTextBox(text: "23", title: "Age"),
-                  DefaultTextBox(text: "Email@Email.com", title: "Email"),
-                  DefaultTextBox(text: "Jordan", title: "Country"),
-                  DefaultTextBox(text: "Amman", title: "City"),
-                ]),
+                ],
+              ),
+              const Text(
+                "Specialty",
+                style: TextStyle(fontSize: 20),
+              ),
+              const Divider(
+                thickness: 1,
+              ),
+              DefaultTextBox(text: "FNAME ", title: "First Name "),
+              DefaultTextBox(text: "LNAME ", title: "Last Name "),
+              DefaultTextBox(text: "23", title: "Age"),
+              DefaultTextBox(text: "Email@Email.com", title: "Email"),
+              DefaultTextBox(text: "Jordan", title: "Country"),
+              DefaultTextBox(text: "City", title: "City"),
+            ]),
           )
         ],
       )),
