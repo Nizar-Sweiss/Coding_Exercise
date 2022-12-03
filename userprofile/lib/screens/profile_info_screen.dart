@@ -12,7 +12,7 @@ class ProfileInfoScreen extends StatefulWidget {
 }
 
 class _ProfileInfoScreen extends State<ProfileInfoScreen> {
-  final double coverHeight = 280;
+  final double coverHeight = 150;
 
   final double profileHeight = 150;
   final Stream<QuerySnapshot> users =
@@ -41,10 +41,10 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
                   AsyncSnapshot<QuerySnapshot> snapshot,
                 ) {
                   if (snapshot.hasError) {
-                    return Text("Something went Wrong ");
+                    return const Text("Something went Wrong ");
                   }
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Text("Loading ...");
+                    return const Text("Loading ...");
                   }
                   final data = snapshot.requireData;
                   final user = User(
@@ -64,8 +64,7 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
                         children: [
                           Text(
                             " ${user.displayName}",
-                            style: const TextStyle(
-                                fontSize: 30, fontWeight: FontWeight.bold),
+                            style: Theme.of(context).textTheme.headline1,
                           ),
                           IconButton(
                             icon: const Icon(
@@ -81,7 +80,9 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
                       ),
                       Text(
                         user.major,
-                        style: const TextStyle(fontSize: 20),
+                        style: Theme.of(context).textTheme.headline2,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       const Divider(
                         thickness: 1,
@@ -111,17 +112,12 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        Container(
-            color: const Color.fromARGB(255, 80, 80, 80),
-            margin: EdgeInsets.only(bottom: bottom),
-            child: buildCoverImage()),
+        buildCoverImage(),
         Positioned(
-            top: topPosition,
-            left: 10,
-            child: CircleAvatar(
-              radius: 75,
-              child: buildProfileImage(),
-            )),
+          top: topPosition,
+          left: 10,
+          child: buildProfileImage(),
+        ),
       ],
     );
   }
@@ -131,7 +127,8 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
         future: _getImage(context, "bk1.jpg"),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return SizedBox(
+            return Container(
+              margin: EdgeInsets.only(bottom: profileHeight / 2),
               width: double.infinity,
               height: coverHeight,
               child: snapshot.data,
@@ -152,17 +149,21 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
         future: _getImage(context, "pfp1.png"),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return SizedBox(
-              width: MediaQuery.of(context).size.width / 1.2,
-              height: MediaQuery.of(context).size.width / 1.2,
+            return Container(
+              decoration: BoxDecoration(
+                  color: Colors.green, borderRadius: BorderRadius.circular(100)
+                  //more than 50% of width makes circle
+                  ),
+              height: profileHeight,
+              width: profileHeight,
               child: snapshot.data,
             );
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return SizedBox(
-              width: MediaQuery.of(context).size.width / 1.2,
-              height: MediaQuery.of(context).size.width / 1.2,
-              child: const Center(child: CircularProgressIndicator()),
+              height: profileHeight,
+              width: profileHeight,
+              child: const CircularProgressIndicator(),
             );
           }
           return Container();
@@ -174,7 +175,7 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
     await FirebaseService.loadImage(context, imageName).then((value) {
       image = Image.network(
         value.toString(),
-        fit: BoxFit.scaleDown,
+        fit: BoxFit.cover,
       );
     });
     return image;

@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:userprofile/style/style_barrel.dart';
 import 'package:userprofile/utility/firebase_service.dart';
 import 'package:userprofile/widgets/widgets_barrel.dart';
 
@@ -7,11 +9,11 @@ class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
 
   @override
-  State<EditProfileScreen> createState() => _nameState();
+  State<EditProfileScreen> createState() => _EditProfileScreen();
 }
 
-class _nameState extends State<EditProfileScreen> {
-  final double coverHeight = 280;
+class _EditProfileScreen extends State<EditProfileScreen> {
+  final double coverHeight = 150;
 
   final double profileHeight = 150;
   final Stream<QuerySnapshot> users =
@@ -24,17 +26,15 @@ class _nameState extends State<EditProfileScreen> {
   TextEditingController countryController = TextEditingController();
   TextEditingController cityController = TextEditingController();
 
+  final formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: CircleAvatar(
-        radius: 30,
-        child: IconButton(
-          icon: Icon(
-            Icons.done,
-            size: 30,
-          ),
-          onPressed: () {
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          final isValidForm = formKey.currentState!.validate();
+          if (isValidForm) {
             final docUser = FirebaseFirestore.instance
                 .collection("users")
                 .doc("TqrALtHASBtcgstKLGUx");
@@ -49,7 +49,10 @@ class _nameState extends State<EditProfileScreen> {
               'first name': firstNameController.text,
               'last name ': lastNameController.text,
             });
-          },
+          }
+        },
+        child: const Icon(
+          Icons.done,
         ),
       ),
       appBar: AppBar(
@@ -61,61 +64,115 @@ class _nameState extends State<EditProfileScreen> {
         ],
       ),
       body: SafeArea(
-          child: ListView(
-        children: [
-          buildTopContents(),
-          Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: StreamBuilder<QuerySnapshot>(
-                stream: users,
-                builder: (
-                  BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot,
-                ) {
-                  if (snapshot.hasError) {
-                    return const Text("Something went Wrong ");
-                  }
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Text("Loading ...");
-                  }
-                  final data = snapshot.requireData;
+          child: Form(
+        key: formKey,
+        child: ListView(
+          children: [
+            buildTopContents(),
+            Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: users,
+                  builder: (
+                    BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot,
+                  ) {
+                    if (snapshot.hasError) {
+                      return const Text("Something went Wrong ");
+                    }
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Text("Loading ...");
+                    }
+                    final data = snapshot.requireData;
 
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      DefaultFormField(
-                          hint: "Enter here ... ",
-                          title: "First Name",
-                          controller: firstNameController),
-                      DefaultFormField(
-                          hint: "Enter here ... ",
-                          title: "Last Name",
-                          controller: lastNameController),
-                      DefaultFormField(
-                          hint: "Enter here ... ",
-                          title: "Display Name",
-                          controller: displayNameController),
-                      DefaultFormField(
-                          hint: "Enter here ... ",
-                          title: "Email",
-                          controller: emailController),
-                      DefaultFormField(
-                          hint: "Enter here ... ",
-                          title: "Age",
-                          controller: ageController),
-                      DefaultFormField(
-                          hint: "Enter here ... ",
-                          title: "Country",
-                          controller: countryController),
-                      DefaultFormField(
-                          hint: "Enter here ... ",
-                          title: "City",
-                          controller: cityController),
-                    ],
-                  );
-                },
-              ))
-        ],
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        DefaultFormField(
+                            validator: (text) {
+                              if (text!.isEmpty) {
+                                return "Enter first name";
+                              }
+                            },
+                            keyboardtype: TextInputType.name,
+                            hint: "Enter here ... ",
+                            title: "First Name",
+                            controller: firstNameController),
+                        DefaultFormField(
+                            validator: (text) {
+                              if (text!.isEmpty) {
+                                return "Enter last name ";
+                              }
+                            },
+                            keyboardtype: TextInputType.name,
+                            hint: "Enter here ... ",
+                            title: "Last Name",
+                            controller: lastNameController),
+                        DefaultFormField(
+                            validator: (text) {
+                              if (text!.isEmpty ||
+                                  !RegExp(r'^[a-z A-Z 0-9]+$').hasMatch(text)) {
+                                return "Enter correct name";
+                              } else {
+                                return null;
+                              }
+                            },
+                            keyboardtype: TextInputType.name,
+                            hint: "Enter here ... ",
+                            title: "Display Name",
+                            controller: displayNameController),
+                        DefaultFormField(
+                            validator: (email) => email!.isEmpty &&
+                                    !EmailValidator.validate(email)
+                                ? "Enter a valid email"
+                                : null,
+                            hint: "Enter here ... ",
+                            title: "Email",
+                            keyboardtype: TextInputType.emailAddress,
+                            controller: emailController),
+                        DefaultFormField(
+                            validator: (text) {
+                              if (text!.isEmpty) {
+                                return "Enter valid number ";
+                              } else {
+                                return null;
+                              }
+                            },
+                            keyboardtype: TextInputType.number,
+                            maxLength: 2,
+                            hint: "Enter here ... ",
+                            title: "Age",
+                            controller: ageController),
+                        DefaultFormField(
+                            validator: (text) {
+                              if (text!.isEmpty ||
+                                  !RegExp(r'^[a-z A-Z]+$').hasMatch(text)) {
+                                return "Enter correct name";
+                              } else {
+                                return null;
+                              }
+                            },
+                            hint: "Enter here ... ",
+                            title: "Country",
+                            controller: countryController),
+                        DefaultFormField(
+                            validator: (text) {
+                              if (text!.isEmpty ||
+                                  !RegExp(r'^[a-z A-Z]+$').hasMatch(text)) {
+                                return "Enter correct name";
+                              } else {
+                                return null;
+                              }
+                            },
+                            hint: "Enter here ... ",
+                            title: "City",
+                            controller: cityController),
+                      ],
+                    );
+                  },
+                ))
+          ],
+        ),
       )),
     );
   }
@@ -129,43 +186,39 @@ class _nameState extends State<EditProfileScreen> {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        Container(
-            color: const Color.fromARGB(255, 80, 80, 80),
-            margin: EdgeInsets.only(bottom: bottom),
-            child: buildCoverImage()),
-        Positioned(
-            top: topPosition,
-            left: 10,
-            child: CircleAvatar(
-              backgroundColor: Colors.white,
-              radius: 75,
-              child: Stack(
-                children: [
-                  buildProfileImage(),
-                  Positioned(
-                    bottom: 1,
-                    right: 1,
-                    child: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.add_circle,
-                          color: Color.fromARGB(255, 0, 117, 207),
-                          size: 40,
-                        )),
-                  ),
-                ],
-              ),
-            )),
+        buildCoverImage(),
         Positioned(
           right: 1,
-          top: topPosition + 20,
-          child: IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.edit,
-                color: Colors.white,
-                size: 40,
-              )),
+          top: topPosition,
+          child: CircleAvatar(
+            radius: 30,
+            child: IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.edit,
+                  size: 30,
+                )),
+          ),
+        ),
+        Positioned(
+          top: topPosition,
+          left: 10,
+          child: Stack(
+            children: [
+              buildProfileImage(),
+              Positioned(
+                bottom: 1,
+                right: 1,
+                child: IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.add_circle,
+                      color: Color.fromARGB(255, 0, 117, 207),
+                      size: 40,
+                    )),
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -176,7 +229,8 @@ class _nameState extends State<EditProfileScreen> {
         future: _getImage(context, "bk1.jpg"),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return SizedBox(
+            return Container(
+              margin: EdgeInsets.only(bottom: profileHeight / 2),
               width: double.infinity,
               height: coverHeight,
               child: snapshot.data,
@@ -199,23 +253,19 @@ class _nameState extends State<EditProfileScreen> {
           if (snapshot.connectionState == ConnectionState.done) {
             return Container(
               decoration: BoxDecoration(
-                color: Colors.amber,
-                border: Border.all(),
-                shape: BoxShape.circle,
-              ),
+                  color: Colors.green, borderRadius: BorderRadius.circular(100)
+                  //more than 50% of width makes circle
+                  ),
+              height: profileHeight,
+              width: profileHeight,
               child: snapshot.data,
             );
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Container(
-              width: MediaQuery.of(context).size.width / 1.2,
-              height: MediaQuery.of(context).size.width / 1.2,
-              decoration: BoxDecoration(
-                color: Colors.amber,
-                border: Border.all(),
-                shape: BoxShape.circle,
-              ),
-              child: const Center(child: CircularProgressIndicator()),
+            return SizedBox(
+              height: profileHeight,
+              width: profileHeight,
+              child: const CircularProgressIndicator(),
             );
           }
           return Container();
