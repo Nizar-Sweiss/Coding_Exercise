@@ -41,7 +41,6 @@ class _DefaultFormFieldState extends State<DefaultFormField> {
           SizedBox(
             width: double.infinity,
             child: TextFormField(
-              style: Theme.of(context).textTheme.headline4,
               keyboardType: widget.keyboardtype,
               controller: widget.controller,
               decoration: InputDecoration(

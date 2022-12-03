@@ -28,93 +28,96 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
         centerTitle: true,
       ),
       body: SafeArea(
-          child: ListView(
-        children: [
-          buildTopContents(),
-          Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: StreamBuilder<QuerySnapshot>(
-                stream: users,
-                builder: (
-                  BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot,
-                ) {
-                  if (snapshot.hasError) {
-                    return const Text("Something went Wrong ");
-                  }
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Text("Loading ...");
-                  }
-                  final data = snapshot.requireData;
-                  final user = User(
-                      firstName: "${data.docs[0]["first name"]}",
-                      email: "${data.docs[0]["email"]}",
-                      lastName: "${data.docs[0]["last name "]}",
-                      displayName: " ${data.docs[0]["display name"]}",
-                      age: "${data.docs[0]["age"]}",
-                      country: "${data.docs[0]["country"]}",
-                      city: "${data.docs[0]["city"]}",
-                      major: "${data.docs[0]["major"]}");
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            " ${user.displayName}",
-                            style: Theme.of(context).textTheme.headline1,
+          child: StreamBuilder<QuerySnapshot>(
+        stream: users,
+        builder: (
+          BuildContext context,
+          AsyncSnapshot<QuerySnapshot> snapshot,
+        ) {
+          if (snapshot.hasError) {
+            return const Text("Something went Wrong ");
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Text("Loading ...");
+          }
+          final data = snapshot.requireData;
+          final user = User(
+              firstName: "${data.docs[0]["first name"]}",
+              email: "${data.docs[0]["email"]}",
+              lastName: "${data.docs[0]["last name "]}",
+              displayName: " ${data.docs[0]["display name"]}",
+              age: "${data.docs[0]["age"]}",
+              country: "${data.docs[0]["country"]}",
+              city: "${data.docs[0]["city"]}",
+              major: "${data.docs[0]["major"]}",
+              coverImagePath: "${data.docs[0]["cover image"]}",
+              profileImagePath: "${data.docs[0]["profile image"]}");
+          return ListView(
+            children: [
+              buildTopContents(user.profileImagePath, user.coverImagePath),
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          " ${user.displayName}",
+                          style: Theme.of(context).textTheme.headline1,
+                        ),
+                        IconButton(
+                          style: IconButton.styleFrom(),
+                          icon: const Icon(
+                            Icons.edit,
+                            size: 30,
                           ),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.edit,
-                              color: Colors.black,
-                              size: 30,
-                            ),
-                            onPressed: () {
-                              Navigator.pushNamed(context, "/editProfile");
-                            },
-                          ),
-                        ],
-                      ),
-                      Text(
-                        user.major,
-                        style: Theme.of(context).textTheme.headline2,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const Divider(
-                        thickness: 1,
-                      ),
-                      DefaultTextBox(
-                          text: user.firstName,
-                          title: AppLocalizations.of(context)!.firstName),
-                      DefaultTextBox(
-                          text: user.lastName,
-                          title: AppLocalizations.of(context)!.lastName),
-                      DefaultTextBox(
-                          text: user.age,
-                          title: AppLocalizations.of(context)!.age),
-                      DefaultTextBox(
-                          text: user.email,
-                          title: AppLocalizations.of(context)!.email),
-                      DefaultTextBox(
-                          text: user.country,
-                          title: AppLocalizations.of(context)!.country),
-                      DefaultTextBox(
-                          text: user.city,
-                          title: AppLocalizations.of(context)!.city),
-                    ],
-                  );
-                },
-              ))
-        ],
+                          onPressed: () {
+                            Navigator.pushNamed(context, "/editProfile");
+                          },
+                        ),
+                      ],
+                    ),
+                    Text(
+                      user.major,
+                      style: Theme.of(context).textTheme.headline2,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const Divider(
+                      thickness: 1,
+                    ),
+                    DefaultTextBox(
+                        text: user.firstName,
+                        title: AppLocalizations.of(context)!.firstName),
+                    DefaultTextBox(
+                        text: user.lastName,
+                        title: AppLocalizations.of(context)!.lastName),
+                    DefaultTextBox(
+                        text: user.age,
+                        title: AppLocalizations.of(context)!.age),
+                    DefaultTextBox(
+                        text: user.email,
+                        title: AppLocalizations.of(context)!.email),
+                    DefaultTextBox(
+                        text: user.country,
+                        title: AppLocalizations.of(context)!.country),
+                    DefaultTextBox(
+                        text: user.city,
+                        title: AppLocalizations.of(context)!.city),
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
       )),
     );
   }
 
 //returns the Over lap of CoverImage and ProfileImage on the top of the screen
-  Widget buildTopContents() {
+  Widget buildTopContents(String profileImage, String coverImage) {
     final topPosition = coverHeight -
         profileHeight /
             2; //to position the profile image between the cover image and the contents info
@@ -122,19 +125,19 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        buildCoverImage(),
+        buildCoverImage(coverImage),
         Positioned(
           top: topPosition,
           left: 10,
-          child: buildProfileImage(),
+          child: buildProfileImage(profileImage),
         ),
       ],
     );
   }
 
 // display the background cover picture
-  Widget buildCoverImage() => FutureBuilder(
-        future: _getImage(context, "bk1.jpg"),
+  Widget buildCoverImage(String coverImage) => FutureBuilder(
+        future: _getImage(context, coverImage),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return Container(
@@ -155,8 +158,8 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
         },
       );
 // display the profile picture
-  Widget buildProfileImage() => FutureBuilder(
-        future: _getImage(context, "pfp1.png"),
+  Widget buildProfileImage(String profileImage) => FutureBuilder(
+        future: _getImage(context, profileImage),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return Container(

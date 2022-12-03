@@ -25,6 +25,9 @@ const light_green_tint_2 = Color.fromARGB(255, 14, 170, 0);
 
 appTheme() {
   return ThemeData(
+      iconTheme: IconThemeData(
+        color: light_blue_tint_2,
+      ),
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
           backgroundColor: light_blue_tint_2,
           iconSize: 40,
