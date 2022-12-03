@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:userprofile/style/style_barrel.dart';
 import 'package:userprofile/utility/firebase_service.dart';
+import 'package:userprofile/utility/storage_service.dart';
 import 'package:userprofile/widgets/widgets_barrel.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
@@ -183,6 +185,8 @@ class _EditProfileScreen extends State<EditProfileScreen> {
 
 //returns the Over lap of CoverImage and ProfileImage on the top of the screen
   Widget buildTopContents() {
+    final Storage storage = Storage();
+
     final topPosition = coverHeight -
         profileHeight /
             2; //to position the profile image between the cover image and the contents info
@@ -197,7 +201,22 @@ class _EditProfileScreen extends State<EditProfileScreen> {
           child: CircleAvatar(
             radius: 30,
             child: IconButton(
-                onPressed: () {},
+                onPressed: () async {
+                  final result = await FilePicker.platform.pickFiles(
+                      allowMultiple: false,
+                      type: FileType.custom,
+                      allowedExtensions: ['png', 'jpg']);
+                  if (result == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("No file selected ")));
+                    return null;
+                  }
+                  final path = result.files.single.path!;
+                  final fileName = result.files.single.name;
+                  storage
+                      .uploadFile(path, fileName)
+                      .then((value) => print("uploaded successfuly"));
+                },
                 icon: const Icon(
                   Icons.edit,
                   size: 30,
