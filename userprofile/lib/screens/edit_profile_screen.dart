@@ -23,6 +23,7 @@ class _nameState extends State<EditProfileScreen> {
   TextEditingController ageController = TextEditingController();
   TextEditingController countryController = TextEditingController();
   TextEditingController cityController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +34,22 @@ class _nameState extends State<EditProfileScreen> {
             Icons.done,
             size: 30,
           ),
-          onPressed: () {},
+          onPressed: () {
+            final docUser = FirebaseFirestore.instance
+                .collection("users")
+                .doc("TqrALtHASBtcgstKLGUx");
+
+            //update user fields
+            docUser.update({
+              'age': ageController.text,
+              'city': cityController.text,
+              'country': countryController.text,
+              'display name': displayNameController.text,
+              'email': emailController.text,
+              'first name': firstNameController.text,
+              'last name ': lastNameController.text,
+            });
+          },
         ),
       ),
       appBar: AppBar(
@@ -181,16 +197,24 @@ class _nameState extends State<EditProfileScreen> {
         future: _getImage(context, "pfp1.png"),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return SizedBox(
-              width: MediaQuery.of(context).size.width / 1.2,
-              height: MediaQuery.of(context).size.width / 1.2,
+            return Container(
+              decoration: BoxDecoration(
+                color: Colors.amber,
+                border: Border.all(),
+                shape: BoxShape.circle,
+              ),
               child: snapshot.data,
             );
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return SizedBox(
+            return Container(
               width: MediaQuery.of(context).size.width / 1.2,
               height: MediaQuery.of(context).size.width / 1.2,
+              decoration: BoxDecoration(
+                color: Colors.amber,
+                border: Border.all(),
+                shape: BoxShape.circle,
+              ),
               child: const Center(child: CircularProgressIndicator()),
             );
           }
@@ -203,7 +227,7 @@ class _nameState extends State<EditProfileScreen> {
     await FirebaseService.loadImage(context, imageName).then((value) {
       image = Image.network(
         value.toString(),
-        fit: BoxFit.scaleDown,
+        fit: BoxFit.cover,
       );
     });
     return image;
