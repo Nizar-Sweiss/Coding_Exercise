@@ -7,10 +7,10 @@ class ProfileInfoScreen extends StatefulWidget {
   const ProfileInfoScreen({super.key});
 
   @override
-  State<ProfileInfoScreen> createState() => _nameState();
+  State<ProfileInfoScreen> createState() => _ProfileInfoScreen();
 }
 
-class _nameState extends State<ProfileInfoScreen> {
+class _ProfileInfoScreen extends State<ProfileInfoScreen> {
   final double coverHeight = 280;
 
   final double profileHeight = 150;
@@ -63,7 +63,9 @@ class _nameState extends State<ProfileInfoScreen> {
                               color: Colors.black,
                               size: 30,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pushNamed(context, "/editProfile");
+                            },
                           ),
                         ],
                       ),

@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:userprofile/screens/screens_barrel.dart';
-
+import 'package:userprofile/utility/utility_barrel.dart';
 import 'utility/firebase_options.dart';
 
 Future<void> main() async {
@@ -16,8 +16,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
+      onGenerateRoute: RouteGenerator.generateRoute,
       debugShowCheckedModeBanner: false,
-      home: EditProfileScreen(),
+      home: ProfileInfoScreen(),
     );
   }
 }
