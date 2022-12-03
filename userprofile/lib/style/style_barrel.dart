@@ -41,6 +41,10 @@ appTheme() {
           color: light_blue_tint_2,
           fontSize: 25,
         ),
+        headline4: TextStyle(
+          color: oxford_blue_tint_1,
+          fontSize: 20,
+        ),
         headline3: TextStyle(
             color: light_blue_tint_2,
             fontSize: 20,

@@ -134,7 +134,8 @@ class _EditProfileScreen extends State<EditProfileScreen> {
                             controller: emailController),
                         DefaultFormField(
                             validator: (text) {
-                              if (text!.isEmpty) {
+                              if (text!.isEmpty ||
+                                  !RegExp(r'^[0-9]+$').hasMatch(text)) {
                                 return AppLocalizations.of(context)!.ageError;
                               } else {
                                 return null;
