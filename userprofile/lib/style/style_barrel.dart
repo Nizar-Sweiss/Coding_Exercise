@@ -23,10 +23,28 @@ const light_green_tint_1 = Color.fromARGB(255, 210, 255, 206); //D2FFCE
 const light_yellow_tint_2 = Color.fromARGB(255, 250, 255, 190); //FAFFBE
 const light_green_tint_2 = Color.fromARGB(255, 14, 170, 0);
 
-// const TextTheme defaultTextTheme = TextTheme(
-//   button: TextStyle(
-//     color: Colors.white,
-//     fontWeight: FontWeight.bold,
-//     fontSize: 16,
-//   ),
-// );
+appTheme() {
+  return ThemeData(
+      floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: light_blue_tint_2,
+          iconSize: 40,
+          splashColor: light_blue_tint_2),
+      colorSchemeSeed: oxford_blue_tint_2,
+      brightness: Brightness.dark,
+      scaffoldBackgroundColor: oxford_blue_tint_2,
+      textTheme: const TextTheme(
+        headline1: TextStyle(
+            color: light_blue_tint_2,
+            fontSize: 30,
+            fontWeight: FontWeight.bold),
+        headline2: TextStyle(
+          color: light_blue_tint_2,
+          fontSize: 25,
+        ),
+        headline3: TextStyle(
+            color: light_blue_tint_2,
+            fontSize: 20,
+            fontWeight: FontWeight.bold),
+        bodyText2: TextStyle(color: oxford_blue_tint_1),
+      ));
+}

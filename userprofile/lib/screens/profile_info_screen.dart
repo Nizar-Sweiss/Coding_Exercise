@@ -4,6 +4,8 @@ import 'package:userprofile/models/user.dart';
 import 'package:userprofile/utility/firebase_service.dart';
 import 'package:userprofile/widgets/widgets_barrel.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localization.dart';
+
 class ProfileInfoScreen extends StatefulWidget {
   const ProfileInfoScreen({super.key});
 
@@ -21,12 +23,9 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Profile Info"),
+        title: Text(AppLocalizations.of(context)!.profileInfo),
         //title postion in the middle of the App Bar
         centerTitle: true,
-        actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.language))
-        ],
       ),
       body: SafeArea(
           child: ListView(
@@ -88,12 +87,23 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
                         thickness: 1,
                       ),
                       DefaultTextBox(
-                          text: user.firstName, title: "First Name "),
-                      DefaultTextBox(text: user.lastName, title: "Last Name "),
-                      DefaultTextBox(text: user.age, title: "Age"),
-                      DefaultTextBox(text: user.email, title: "Email"),
-                      DefaultTextBox(text: user.country, title: "Country"),
-                      DefaultTextBox(text: user.city, title: "City"),
+                          text: user.firstName,
+                          title: AppLocalizations.of(context)!.firstName),
+                      DefaultTextBox(
+                          text: user.lastName,
+                          title: AppLocalizations.of(context)!.lastName),
+                      DefaultTextBox(
+                          text: user.age,
+                          title: AppLocalizations.of(context)!.age),
+                      DefaultTextBox(
+                          text: user.email,
+                          title: AppLocalizations.of(context)!.email),
+                      DefaultTextBox(
+                          text: user.country,
+                          title: AppLocalizations.of(context)!.country),
+                      DefaultTextBox(
+                          text: user.city,
+                          title: AppLocalizations.of(context)!.city),
                     ],
                   );
                 },

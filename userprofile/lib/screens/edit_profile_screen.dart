@@ -5,6 +5,8 @@ import 'package:userprofile/style/style_barrel.dart';
 import 'package:userprofile/utility/firebase_service.dart';
 import 'package:userprofile/widgets/widgets_barrel.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localization.dart';
+
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
 
@@ -56,12 +58,9 @@ class _EditProfileScreen extends State<EditProfileScreen> {
         ),
       ),
       appBar: AppBar(
-        title: const Text("Edit Info"),
+        title: Text(AppLocalizations.of(context)!.editInfo),
         //title postion in the middle of the App Bar
         centerTitle: true,
-        actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.language))
-        ],
       ),
       body: SafeArea(
           child: Form(
@@ -91,49 +90,52 @@ class _EditProfileScreen extends State<EditProfileScreen> {
                         DefaultFormField(
                             validator: (text) {
                               if (text!.isEmpty) {
-                                return "Enter first name";
+                                return AppLocalizations.of(context)!
+                                    .firstNameError;
                               }
                             },
                             keyboardtype: TextInputType.name,
                             hint: "Enter here ... ",
-                            title: "First Name",
+                            title: AppLocalizations.of(context)!.firstName,
                             controller: firstNameController),
                         DefaultFormField(
                             validator: (text) {
                               if (text!.isEmpty) {
-                                return "Enter last name ";
+                                return AppLocalizations.of(context)!
+                                    .lastNameError;
                               }
                             },
                             keyboardtype: TextInputType.name,
                             hint: "Enter here ... ",
-                            title: "Last Name",
+                            title: AppLocalizations.of(context)!.lastName,
                             controller: lastNameController),
                         DefaultFormField(
                             validator: (text) {
                               if (text!.isEmpty ||
                                   !RegExp(r'^[a-z A-Z 0-9]+$').hasMatch(text)) {
-                                return "Enter correct name";
+                                return AppLocalizations.of(context)!
+                                    .displayNameError;
                               } else {
                                 return null;
                               }
                             },
                             keyboardtype: TextInputType.name,
                             hint: "Enter here ... ",
-                            title: "Display Name",
+                            title: AppLocalizations.of(context)!.displayName,
                             controller: displayNameController),
                         DefaultFormField(
                             validator: (email) => email!.isEmpty &&
                                     !EmailValidator.validate(email)
-                                ? "Enter a valid email"
+                                ? AppLocalizations.of(context)!.emailError
                                 : null,
                             hint: "Enter here ... ",
-                            title: "Email",
+                            title: AppLocalizations.of(context)!.email,
                             keyboardtype: TextInputType.emailAddress,
                             controller: emailController),
                         DefaultFormField(
                             validator: (text) {
                               if (text!.isEmpty) {
-                                return "Enter valid number ";
+                                return AppLocalizations.of(context)!.ageError;
                               } else {
                                 return null;
                               }
@@ -141,31 +143,32 @@ class _EditProfileScreen extends State<EditProfileScreen> {
                             keyboardtype: TextInputType.number,
                             maxLength: 2,
                             hint: "Enter here ... ",
-                            title: "Age",
+                            title: AppLocalizations.of(context)!.age,
                             controller: ageController),
                         DefaultFormField(
                             validator: (text) {
                               if (text!.isEmpty ||
                                   !RegExp(r'^[a-z A-Z]+$').hasMatch(text)) {
-                                return "Enter correct name";
+                                return AppLocalizations.of(context)!
+                                    .countryError;
                               } else {
                                 return null;
                               }
                             },
                             hint: "Enter here ... ",
-                            title: "Country",
+                            title: AppLocalizations.of(context)!.country,
                             controller: countryController),
                         DefaultFormField(
                             validator: (text) {
                               if (text!.isEmpty ||
                                   !RegExp(r'^[a-z A-Z]+$').hasMatch(text)) {
-                                return "Enter correct name";
+                                return AppLocalizations.of(context)!.cityError;
                               } else {
                                 return null;
                               }
                             },
                             hint: "Enter here ... ",
-                            title: "City",
+                            title: AppLocalizations.of(context)!.city,
                             controller: cityController),
                       ],
                     );

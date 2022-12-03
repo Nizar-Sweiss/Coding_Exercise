@@ -1,0 +1,20 @@
+{
+    "language": "عربى",
+    "firstName": "الاسم الاول",
+    "lastName": "الاسم الاخير",
+    "age": "عمر",
+    "email": "البريد الإلكتروني",
+    "country": "دولة",
+    "city": "مدينة",
+    "profileInfo": "معلومات الشخصي",
+    "editInfo": "تحرير المعلومات",
+    "displayName": "اسم العرض",
+    
+    "firstNameError": "أدخل الاسم الأول",
+    "lastNameError": "إدخال الاسم آلاخير",
+    "ageError": "أدخل رقمًا صالحًا",
+    "emailError": "أدخل البريد الإلكتروني صحيح",
+    "countryError": "أدخل النص الصحيح",
+    "cityError": "أدخل النص الصحيح",
+    "displayNameError": "أدخل اسمًا صالحًا"
+}

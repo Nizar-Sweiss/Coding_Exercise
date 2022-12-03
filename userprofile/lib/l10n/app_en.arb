@@ -1,0 +1,77 @@
+{
+    "language": "English",
+    "@language":{
+        "description": "The current Language"
+    },
+    "firstName": "First Name",
+    "@firstName": {
+        "description": "User First Name"
+    },
+    "lastName": "Last Name",
+    "@lastName": {
+        "description": "User Last Name"
+    },
+    "age": "Age",
+    "@age": {
+        "description": "User age"
+    },
+    "email": "Email",
+    "@email": {
+        "description": "User Email"
+    },
+    "country": "Country",
+    "@country": {
+        "description": "The Country"
+    },
+    "city": "City",
+    "@city": {
+        "description": "User First Name"
+    },
+     "profileInfo": "Profile Info",
+    "@profileInfo": {
+        "description": "User Profile info"
+    },
+    "editInfo": "Edit Info",
+    "@editInfo": {
+        "description": "User Profile info"
+    },
+    "displayName": "Display Name",
+    "@editInfo": {
+        "description": "User display name"
+    },
+    
+
+    "firstNameError": "Enter first name",
+    "@firstNameError": {
+        "description": "User First Name"
+    },
+    "lastNameError": "Enter last name ",
+    "@lastNameError": {
+        "description": "User Last Name"
+    },
+    "ageError": "Enter valid number ",
+    "@ageError": {
+        "description": "User age"
+    },
+    "emailError": "Enter a valid E-mail",
+    "@emailError": {
+        "description": "User Email"
+    },
+    "countryError": "Enter correct Text",
+    "@countryError": {
+        "description": "The Country"
+    },
+    "cityError": "Enter correct Text",
+    "@cityError": {
+        "description": "User First Name"
+    },
+    "displayNameError": "Enter correct name",
+    "@editInfoError": {
+        "description": "User display name"
+    }
+
+   
+  
+  
+
+}
