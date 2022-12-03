@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:userprofile/models/user.dart';
 import 'package:userprofile/utility/firebase_service.dart';
 import 'package:userprofile/widgets/widgets_barrel.dart';
 
@@ -46,6 +47,15 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
                     return Text("Loading ...");
                   }
                   final data = snapshot.requireData;
+                  final user = User(
+                      firstName: "${data.docs[0]["first name"]}",
+                      email: "${data.docs[0]["email"]}",
+                      lastName: "${data.docs[0]["last name "]}",
+                      displayName: " ${data.docs[0]["display name"]}",
+                      age: "${data.docs[0]["age"]}",
+                      country: "${data.docs[0]["country"]}",
+                      city: "${data.docs[0]["city"]}",
+                      major: "${data.docs[0]["major"]}");
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -53,7 +63,7 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            " ${data.docs[0]["display name"]}",
+                            " ${user.displayName}",
                             style: const TextStyle(
                                 fontSize: 30, fontWeight: FontWeight.bold),
                           ),
@@ -70,26 +80,19 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
                         ],
                       ),
                       Text(
-                        "${data.docs[0]["major"]}",
+                        user.major,
                         style: const TextStyle(fontSize: 20),
                       ),
                       const Divider(
                         thickness: 1,
                       ),
                       DefaultTextBox(
-                          text: "${data.docs[0]["first name"]}",
-                          title: "First Name "),
-                      DefaultTextBox(
-                          text: "${data.docs[0]["last name "]}",
-                          title: "Last Name "),
-                      DefaultTextBox(
-                          text: "${data.docs[0]["age"]}", title: "Age"),
-                      DefaultTextBox(
-                          text: "${data.docs[0]["email"]}", title: "Email"),
-                      DefaultTextBox(
-                          text: "${data.docs[0]["country"]}", title: "Country"),
-                      DefaultTextBox(
-                          text: "${data.docs[0]["city"]}", title: "City"),
+                          text: user.firstName, title: "First Name "),
+                      DefaultTextBox(text: user.lastName, title: "Last Name "),
+                      DefaultTextBox(text: user.age, title: "Age"),
+                      DefaultTextBox(text: user.email, title: "Email"),
+                      DefaultTextBox(text: user.country, title: "Country"),
+                      DefaultTextBox(text: user.city, title: "City"),
                     ],
                   );
                 },
