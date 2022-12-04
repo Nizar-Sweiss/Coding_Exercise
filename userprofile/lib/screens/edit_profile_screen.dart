@@ -54,6 +54,12 @@ class _EditProfileScreen extends State<EditProfileScreen> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -66,15 +72,20 @@ class _EditProfileScreen extends State<EditProfileScreen> {
 
             //update user fields
             docUser.update({
-              'age': ageController.text,
-              'city': cityController.text,
-              'country': countryController.text,
-              'display name': displayNameController.text,
-              'email': emailController.text,
-              'first name': firstNameController.text,
-              'last name ': lastNameController.text,
-              'cover image': widget.userData.coverImagePath
+              'age': ageController.text.trim(),
+              'city': cityController.text.trim(),
+              'country': countryController.text.trim(),
+              'display name': displayNameController.text.trim(),
+              'email': emailController.text.trim(),
+              'first name': firstNameController.text.trim(),
+              'last name ': lastNameController.text.trim(),
+              'cover image': widget.userData.coverImagePath,
+              'profile image': widget.userData.profileImagePath
             });
+            Utils.showSnackBar("Updated Successfuly", false);
+            Navigator.pop(context);
+          } else {
+            Utils.showSnackBar("Check Your Information", true);
           }
         },
         child: const Icon(
@@ -125,9 +136,12 @@ class _EditProfileScreen extends State<EditProfileScreen> {
                             controller: firstNameController),
                         DefaultFormField(
                             validator: (text) {
-                              if (text!.isEmpty) {
+                              if (text!.isEmpty ||
+                                  !RegExp(r'^[a-z A-Z ]+$').hasMatch(text)) {
                                 return AppLocalizations.of(context)!
-                                    .lastNameError;
+                                    .displayNameError;
+                              } else {
+                                return null;
                               }
                             },
                             keyboardtype: TextInputType.name,
