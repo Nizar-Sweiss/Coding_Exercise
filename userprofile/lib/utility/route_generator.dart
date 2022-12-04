@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:userprofile/models/user.dart';
 import 'package:userprofile/screens/screens_barrel.dart';
 
 class RouteGenerator {
@@ -8,7 +9,12 @@ class RouteGenerator {
       case '/':
         return MaterialPageRoute(builder: (_) => const ProfileInfoScreen());
       case '/editProfile':
-        return MaterialPageRoute(builder: (_) => const EditProfileScreen());
+        User userData = settings.arguments as User;
+
+        return MaterialPageRoute(
+            builder: (_) => EditProfileScreen(
+                  userData: (userData),
+                ));
 
       default:
         return _errorRoute();

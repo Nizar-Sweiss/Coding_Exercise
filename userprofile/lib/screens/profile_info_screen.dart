@@ -74,7 +74,11 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
                             size: 30,
                           ),
                           onPressed: () {
-                            Navigator.pushNamed(context, "/editProfile");
+                            Navigator.pushNamed(
+                              context,
+                              "/editProfile",
+                              arguments: user,
+                            );
                           },
                         ),
                       ],

@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scaffoldMessengerKey: Utils.messengerKey,
       theme: appTheme(),
       supportedLocales: L10n.all,
       localizationsDelegates: [

@@ -2,15 +2,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:userprofile/models/user.dart';
 import 'package:userprofile/style/style_barrel.dart';
 import 'package:userprofile/utility/firebase_service.dart';
 import 'package:userprofile/utility/storage_service.dart';
+import 'package:userprofile/utility/utility_barrel.dart';
 import 'package:userprofile/widgets/widgets_barrel.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({super.key});
+  final User userData;
+
+  const EditProfileScreen({
+    super.key,
+    required this.userData,
+  });
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreen();
@@ -33,6 +40,20 @@ class _EditProfileScreen extends State<EditProfileScreen> {
   final formKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    displayNameController.text = widget.userData.displayName;
+    firstNameController.text = widget.userData.firstName;
+    lastNameController.text = widget.userData.lastName;
+
+    emailController.text = widget.userData.email;
+    ageController.text = widget.userData.age;
+
+    countryController.text = widget.userData.country;
+    cityController.text = widget.userData.city;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -52,6 +73,7 @@ class _EditProfileScreen extends State<EditProfileScreen> {
               'email': emailController.text,
               'first name': firstNameController.text,
               'last name ': lastNameController.text,
+              'cover image': widget.userData.coverImagePath
             });
           }
         },
@@ -69,7 +91,8 @@ class _EditProfileScreen extends State<EditProfileScreen> {
         key: formKey,
         child: ListView(
           children: [
-            buildTopContents(),
+            buildTopContents(widget.userData.coverImagePath,
+                widget.userData.profileImagePath),
             Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: StreamBuilder<QuerySnapshot>(
@@ -184,7 +207,7 @@ class _EditProfileScreen extends State<EditProfileScreen> {
   }
 
 //returns the Over lap of CoverImage and ProfileImage on the top of the screen
-  Widget buildTopContents() {
+  Widget buildTopContents(String coverImage, String profileImage) {
     final Storage storage = Storage();
 
     final topPosition = coverHeight -
@@ -194,7 +217,7 @@ class _EditProfileScreen extends State<EditProfileScreen> {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        buildCoverImage(),
+        buildCoverImage(coverImage),
         Positioned(
           right: 1,
           top: topPosition,
@@ -211,11 +234,17 @@ class _EditProfileScreen extends State<EditProfileScreen> {
                         const SnackBar(content: Text("No file selected ")));
                     return null;
                   }
-                  final path = result.files.single.path!;
-                  final fileName = result.files.single.name;
-                  storage
-                      .uploadFile(path, fileName)
-                      .then((value) => print("uploaded successfuly"));
+                  setState(() {
+                    final path = result.files.single.path!;
+                    final fileName = result.files.single.name;
+                    widget.userData.coverImagePath = fileName;
+                    storage
+                        .uploadFile(path, fileName)
+                        .then((value) => print("uploaded successfuly"));
+                    Utils.showSnackBar(
+                        "Cover Image set seccessfully.\nconform your edit to make change ",
+                        false);
+                  });
                 },
                 icon: const Icon(
                   Icons.edit,
@@ -228,12 +257,33 @@ class _EditProfileScreen extends State<EditProfileScreen> {
           left: 10,
           child: Stack(
             children: [
-              buildProfileImage(),
+              buildProfileImage(profileImage),
               Positioned(
                 bottom: 1,
                 right: 1,
                 child: IconButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      final result = await FilePicker.platform.pickFiles(
+                          allowMultiple: false,
+                          type: FileType.custom,
+                          allowedExtensions: ['png', 'jpg']);
+                      if (result == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("No file selected ")));
+                        return null;
+                      }
+                      setState(() {
+                        final path = result.files.single.path!;
+                        final fileName = result.files.single.name;
+                        widget.userData.profileImagePath = fileName;
+                        storage
+                            .uploadFile(path, fileName)
+                            .then((value) => print("uploaded successfuly"));
+                        Utils.showSnackBar(
+                            "Profile Image set seccessfully.\nconform your edit to make change ",
+                            false);
+                      });
+                    },
                     icon: const Icon(
                       Icons.add_circle,
                       color: Color.fromARGB(255, 0, 117, 207),
@@ -248,8 +298,8 @@ class _EditProfileScreen extends State<EditProfileScreen> {
   }
 
 // display the background cover picture
-  Widget buildCoverImage() => FutureBuilder(
-        future: _getImage(context, "bk1.jpg"),
+  Widget buildCoverImage(String coverImage) => FutureBuilder(
+        future: _getImage(context, coverImage),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return Container(
@@ -270,8 +320,8 @@ class _EditProfileScreen extends State<EditProfileScreen> {
         },
       );
 // display the profile picture
-  Widget buildProfileImage() => FutureBuilder(
-        future: _getImage(context, "pfp1.png"),
+  Widget buildProfileImage(String profileImage) => FutureBuilder(
+        future: _getImage(context, profileImage),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return Container(
