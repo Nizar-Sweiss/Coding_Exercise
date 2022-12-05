@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:userprofile/l10n/l10n.dart';
 import 'package:userprofile/screens/screens_barrel.dart';
-import 'package:userprofile/style/style_barrel.dart';
+import 'package:userprofile/style/app_style.dart';
 import 'package:userprofile/utility/utility_barrel.dart';
 import 'utility/firebase/firebase_options.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
