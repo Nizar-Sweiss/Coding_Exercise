@@ -3,12 +3,9 @@ import 'package:email_validator/email_validator.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:userprofile/models/user.dart';
-import 'package:userprofile/style/style_barrel.dart';
-import 'package:userprofile/utility/firebase_service.dart';
-import 'package:userprofile/utility/storage_service.dart';
+import 'package:userprofile/utility/firebase/storage_service.dart';
 import 'package:userprofile/utility/utility_barrel.dart';
 import 'package:userprofile/widgets/widgets_barrel.dart';
-
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -25,10 +22,11 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreen extends State<EditProfileScreen> {
   final double coverHeight = 150;
-
   final double profileHeight = 150;
+
   final Stream<QuerySnapshot> users =
       FirebaseFirestore.instance.collection("users").snapshots();
+
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController displayNameController = TextEditingController();
@@ -44,10 +42,8 @@ class _EditProfileScreen extends State<EditProfileScreen> {
     displayNameController.text = widget.userData.displayName;
     firstNameController.text = widget.userData.firstName;
     lastNameController.text = widget.userData.lastName;
-
     emailController.text = widget.userData.email;
     ageController.text = widget.userData.age;
-
     countryController.text = widget.userData.country;
     cityController.text = widget.userData.city;
     super.initState();
@@ -55,7 +51,14 @@ class _EditProfileScreen extends State<EditProfileScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    displayNameController.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
+    emailController.dispose();
+    ageController.dispose();
+    countryController.dispose();
+    cityController.dispose();
+
     super.dispose();
   }
 
@@ -231,7 +234,10 @@ class _EditProfileScreen extends State<EditProfileScreen> {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        buildCoverImage(coverImage),
+        CoverImage(
+          coverImage: coverImage,
+          isEdit: true,
+        ),
         Positioned(
           right: 1,
           top: topPosition,
@@ -271,7 +277,9 @@ class _EditProfileScreen extends State<EditProfileScreen> {
           left: 10,
           child: Stack(
             children: [
-              buildProfileImage(profileImage),
+              ProfileImage(
+                profileImage: profileImage,
+              ),
               Positioned(
                 bottom: 1,
                 right: 1,
@@ -309,64 +317,5 @@ class _EditProfileScreen extends State<EditProfileScreen> {
         ),
       ],
     );
-  }
-
-// display the background cover picture
-  Widget buildCoverImage(String coverImage) => FutureBuilder(
-        future: _getImage(context, coverImage),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return Container(
-              margin: EdgeInsets.only(bottom: profileHeight / 2),
-              width: double.infinity,
-              height: coverHeight,
-              child: snapshot.data,
-            );
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return SizedBox(
-              width: double.infinity,
-              height: coverHeight,
-              child: const Center(child: CircularProgressIndicator()),
-            );
-          }
-          return Container();
-        },
-      );
-// display the profile picture
-  Widget buildProfileImage(String profileImage) => FutureBuilder(
-        future: _getImage(context, profileImage),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return Container(
-              decoration: BoxDecoration(
-                  color: Colors.green, borderRadius: BorderRadius.circular(100)
-                  //more than 50% of width makes circle
-                  ),
-              height: profileHeight,
-              width: profileHeight,
-              child: snapshot.data,
-            );
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return SizedBox(
-              height: profileHeight,
-              width: profileHeight,
-              child: const CircularProgressIndicator(),
-            );
-          }
-          return Container();
-        },
-      );
-  //return requested image from FireStorage
-  Future<Widget> _getImage(BuildContext context, String imageName) async {
-    late Image image;
-    await FirebaseService.loadImage(context, imageName).then((value) {
-      image = Image.network(
-        value.toString(),
-        fit: BoxFit.cover,
-      );
-    });
-    return image;
   }
 }
