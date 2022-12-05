@@ -138,7 +138,6 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
       children: [
         CoverImage(
           coverImage: coverImage,
-          isEdit: false,
         ),
         Positioned(
           top: topPosition,

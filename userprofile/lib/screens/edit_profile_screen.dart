@@ -46,6 +46,7 @@ class _EditProfileScreen extends State<EditProfileScreen> {
     ageController.text = widget.userData.age;
     countryController.text = widget.userData.country;
     cityController.text = widget.userData.city;
+
     super.initState();
   }
 
@@ -58,7 +59,6 @@ class _EditProfileScreen extends State<EditProfileScreen> {
     ageController.dispose();
     countryController.dispose();
     cityController.dispose();
-
     super.dispose();
   }
 
@@ -97,7 +97,6 @@ class _EditProfileScreen extends State<EditProfileScreen> {
       ),
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.editInfo),
-        //title postion in the middle of the App Bar
         centerTitle: true,
       ),
       body: SafeArea(
@@ -121,16 +120,16 @@ class _EditProfileScreen extends State<EditProfileScreen> {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Text("Loading ...");
                     }
-                    final data = snapshot.requireData;
 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         DefaultFormField(
                             validator: (text) {
-                              if (text!.isEmpty) {
+                              if (text!.isEmpty ||
+                                  !RegExp(r'^[a-z A-Z ]+$').hasMatch(text)) {
                                 return AppLocalizations.of(context)!
-                                    .firstNameError;
+                                    .displayNameError;
                               }
                             },
                             keyboardtype: TextInputType.name,
@@ -143,8 +142,6 @@ class _EditProfileScreen extends State<EditProfileScreen> {
                                   !RegExp(r'^[a-z A-Z ]+$').hasMatch(text)) {
                                 return AppLocalizations.of(context)!
                                     .displayNameError;
-                              } else {
-                                return null;
                               }
                             },
                             keyboardtype: TextInputType.name,
@@ -157,8 +154,6 @@ class _EditProfileScreen extends State<EditProfileScreen> {
                                   !RegExp(r'^[a-z A-Z 0-9]+$').hasMatch(text)) {
                                 return AppLocalizations.of(context)!
                                     .displayNameError;
-                              } else {
-                                return null;
                               }
                             },
                             keyboardtype: TextInputType.name,
@@ -179,8 +174,6 @@ class _EditProfileScreen extends State<EditProfileScreen> {
                               if (text!.isEmpty ||
                                   !RegExp(r'^[0-9]+$').hasMatch(text)) {
                                 return AppLocalizations.of(context)!.ageError;
-                              } else {
-                                return null;
                               }
                             },
                             keyboardtype: TextInputType.number,
@@ -194,8 +187,6 @@ class _EditProfileScreen extends State<EditProfileScreen> {
                                   !RegExp(r'^[a-z A-Z]+$').hasMatch(text)) {
                                 return AppLocalizations.of(context)!
                                     .countryError;
-                              } else {
-                                return null;
                               }
                             },
                             hint: "Enter here ... ",
@@ -206,8 +197,6 @@ class _EditProfileScreen extends State<EditProfileScreen> {
                               if (text!.isEmpty ||
                                   !RegExp(r'^[a-z A-Z]+$').hasMatch(text)) {
                                 return AppLocalizations.of(context)!.cityError;
-                              } else {
-                                return null;
                               }
                             },
                             hint: "Enter here ... ",
@@ -223,25 +212,22 @@ class _EditProfileScreen extends State<EditProfileScreen> {
     );
   }
 
-//returns the Over lap of CoverImage and ProfileImage on the top of the screen
+  //returns the Over lap of CoverImage and ProfileImage on the top of the screen
   Widget buildTopContents(String coverImage, String profileImage) {
     final Storage storage = Storage();
-
-    final topPosition = coverHeight -
-        profileHeight /
-            2; //to position the profile image between the cover image and the contents info
-    final bottom = profileHeight / 2;
+    //to position the profile image between the cover image and the contents info
+    final topPosition = coverHeight - profileHeight / 2;
     return Stack(
       clipBehavior: Clip.none,
       children: [
         CoverImage(
           coverImage: coverImage,
-          isEdit: true,
         ),
         Positioned(
           right: 1,
           top: topPosition,
           child: CircleAvatar(
+            backgroundColor: Colors.white,
             radius: 30,
             child: IconButton(
                 onPressed: () async {
@@ -292,7 +278,7 @@ class _EditProfileScreen extends State<EditProfileScreen> {
                       if (result == null) {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text("No file selected ")));
-                        return null;
+                        return;
                       }
                       setState(() {
                         final path = result.files.single.path!;
@@ -308,7 +294,7 @@ class _EditProfileScreen extends State<EditProfileScreen> {
                     },
                     icon: const Icon(
                       Icons.add_circle,
-                      color: Color.fromARGB(255, 0, 117, 207),
+                      color: Color.fromARGB(255, 254, 254, 254),
                       size: 40,
                     )),
               ),
