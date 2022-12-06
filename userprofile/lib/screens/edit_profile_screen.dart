@@ -139,15 +139,16 @@ class _EditProfileScreen extends State<EditProfileScreen> {
   void updateUserData(DocumentReference<Map<String, dynamic>> docUser) {
     docUser.update({
       'age': ageController.text.trim(),
-      'city': NewCity,
-      'country': NewCountry,
+      'city': cityController.text,
+      'country': countryController.text,
       'display name': displayNameController.text.trim(),
       'email': emailController.text.trim(),
       'first name': firstNameController.text.trim(),
       'last name ': lastNameController.text.trim(),
       'cover image': widget.userData.coverImagePath,
       'profile image': widget.userData.profileImagePath,
-      'state': NewState
+      'state': stateController.text,
+      'major': majorController.text
     });
   }
 
@@ -175,9 +176,6 @@ class _EditProfileScreen extends State<EditProfileScreen> {
         controller: majorController);
   }
 
-  late String NewCountry;
-  late String NewCity;
-  late String NewState;
   CSCPicker _CountryInfoField(BuildContext context) {
     return CSCPicker(
       cityDropdownLabel: AppLocalizations.of(context)!.city,
@@ -193,31 +191,22 @@ class _EditProfileScreen extends State<EditProfileScreen> {
       dropdownItemStyle: TextStyle(color: Colors.white),
       onCityChanged: (city) {
         if (city == null) {
-          NewCity = "-";
+          cityController.text = "-";
         } else {
-          NewCity = city;
+          cityController.text = city;
         }
       },
       onStateChanged: (state) {
         if (state == null) {
-          NewCity = "-";
+          stateController.text = "-";
         } else {
-          NewState = state;
+          stateController.text = state;
         }
       },
       onCountryChanged: (country) {
-        NewCountry = country;
+        countryController.text = country;
       },
     );
-    // DefaultFormField(
-    //     validator: (text) {
-    //       if (text!.isEmpty || !RegExp(r'^[a-z A-Z]+$').hasMatch(text)) {
-    //         return AppLocalizations.of(context)!.countryError;
-    //       }
-    //     },
-    //     hint: "Enter here ... ",
-    //     title: AppLocalizations.of(context)!.country,
-    //     controller: countryController);
   }
 
   DefaultFormField _AgeField(BuildContext context) {

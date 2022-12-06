@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:userprofile/models/user.dart';
+import 'package:userprofile/utility/firebase/firebase_service.dart';
 import 'package:userprofile/widgets/widgets_barrel.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
@@ -16,16 +17,12 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
   final double coverHeight = 150;
   final double profileHeight = 150;
 
-  final String userID = "TqrALtHASBtcgstKLGUx";
-
-  final Stream<QuerySnapshot> users =
-      FirebaseFirestore.instance.collection("users").snapshots();
+  final Stream<QuerySnapshot> users = userCollection.snapshots();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.profileInfo),
-        //title postion in the middle of the App Bar
         centerTitle: true,
       ),
       body: SafeArea(
@@ -43,66 +40,18 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
           }
 
           final data = snapshot.requireData;
-          final user = fitchLocalUser(data);
+          final user = fetchLocalUser(data);
 
           return ListView(
             children: [
-              buildTopContents(user.profileImagePath, user.coverImagePath),
+              buildTopContents(user),
               Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          " ${user.displayName}",
-                          style: Theme.of(context).textTheme.headline1,
-                        ),
-                        IconButton(
-                          style: IconButton.styleFrom(),
-                          icon: const Icon(
-                            Icons.edit,
-                            size: 30,
-                          ),
-                          onPressed: () {
-                            Navigator.pushNamed(
-                              context,
-                              "/editProfile",
-                              arguments: user,
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                    Text(
-                      user.major,
-                      style: Theme.of(context).textTheme.headline2,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const Divider(
-                      thickness: 1,
-                    ),
-                    DefaultTextBox(
-                        text: user.firstName,
-                        title: AppLocalizations.of(context)!.firstName),
-                    DefaultTextBox(
-                        text: user.lastName,
-                        title: AppLocalizations.of(context)!.lastName),
-                    DefaultTextBox(
-                        text: user.age,
-                        title: AppLocalizations.of(context)!.age),
-                    DefaultTextBox(
-                        text: user.email,
-                        title: AppLocalizations.of(context)!.email),
-                    DefaultTextBox(
-                        text: user.country,
-                        title: AppLocalizations.of(context)!.country),
-                    DefaultTextBox(
-                        text: " ${user.state} - ${user.city}",
-                        title: AppLocalizations.of(context)!.state),
+                    userHeadLineInfo(user, context),
+                    userInfo(user, context),
                   ],
                 ),
               ),
@@ -113,7 +62,52 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
     );
   }
 
-  User fitchLocalUser(QuerySnapshot<Object?> data) {
+  //User Head Line information (Display name and Major).
+  Column userHeadLineInfo(User user, BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          " ${user.displayName}",
+          style: Theme.of(context).textTheme.headline1,
+        ),
+        Text(
+          user.major,
+          style: Theme.of(context).textTheme.headline2,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        const Divider(
+          thickness: 1,
+        ),
+      ],
+    );
+  }
+
+//returns column of the user information from firebase in a text Box
+  Column userInfo(User user, BuildContext context) {
+    return Column(
+      children: [
+        DefaultTextBox(
+            text: user.firstName,
+            title: AppLocalizations.of(context)!.firstName),
+        DefaultTextBox(
+            text: user.lastName, title: AppLocalizations.of(context)!.lastName),
+        DefaultTextBox(
+            text: user.age, title: AppLocalizations.of(context)!.age),
+        DefaultTextBox(
+            text: user.email, title: AppLocalizations.of(context)!.email),
+        DefaultTextBox(
+            text: user.country, title: AppLocalizations.of(context)!.country),
+        DefaultTextBox(
+            text: " ${user.state} - ${user.city}",
+            title: AppLocalizations.of(context)!.state),
+      ],
+    );
+  }
+
+// returns a User Object of the fetched data from firebase to make local Object
+  User fetchLocalUser(QuerySnapshot<Object?> data) {
     return User(
         firstName: "${data.docs[0]["first name"]}",
         email: "${data.docs[0]["email"]}",
@@ -129,7 +123,7 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
   }
 
 //returns the Over lap of CoverImage and ProfileImage on the top of the screen
-  Widget buildTopContents(String profileImage, String coverImage) {
+  Widget buildTopContents(User user) {
     final topPosition = coverHeight -
         profileHeight /
             2; //to position the profile image between the cover image and the contents info
@@ -138,13 +132,31 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
       clipBehavior: Clip.none,
       children: [
         CoverImage(
-          coverImage: coverImage,
+          coverImage: user.coverImagePath,
+        ),
+        Positioned(
+          right: 1,
+          bottom: 1,
+          child: IconButton(
+            style: IconButton.styleFrom(),
+            icon: const Icon(
+              Icons.edit,
+              size: 30,
+            ),
+            onPressed: () {
+              Navigator.pushNamed(
+                context,
+                "/editProfile",
+                arguments: user,
+              );
+            },
+          ),
         ),
         Positioned(
           top: topPosition,
           left: 10,
           child: ProfileImage(
-            profileImage: profileImage,
+            profileImage: user.profileImagePath,
           ),
         ),
       ],
