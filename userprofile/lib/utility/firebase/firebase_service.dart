@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+
+CollectionReference<Map<String, dynamic>> userCollection =
+    FirebaseFirestore.instance.collection("users");
 
 class FirebaseService extends ChangeNotifier {
   FirebaseService();

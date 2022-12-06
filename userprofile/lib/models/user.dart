@@ -7,6 +7,7 @@ class User {
   String age;
   String country;
   String city;
+  String state;
   String major;
   String profileImagePath;
   String coverImagePath;
@@ -19,6 +20,7 @@ class User {
       required this.displayName,
       required this.age,
       required this.country,
+      required this.state,
       required this.city,
       required this.major,
       required this.profileImagePath,
@@ -39,6 +41,7 @@ class User {
   static User fromJson(Map<String, dynamic> json) => User(
       age: json['age'],
       city: json['city'],
+      state: json['state'],
       country: json['country'],
       displayName: json['display name'],
       email: json['email'],

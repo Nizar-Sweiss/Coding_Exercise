@@ -16,5 +16,7 @@
     "emailError": "أدخل البريد الإلكتروني صحيح",
     "countryError": "أدخل النص الصحيح",
     "cityError": "أدخل النص الصحيح",
-    "displayNameError": "أدخل اسمًا صالحًا"
+    "displayNameError": "أدخل اسمًا صالحًا",
+    "state": "ولاية",
+    "major": "تخصص"
 }

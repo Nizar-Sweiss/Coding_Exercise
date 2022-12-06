@@ -101,8 +101,8 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
                         text: user.country,
                         title: AppLocalizations.of(context)!.country),
                     DefaultTextBox(
-                        text: user.city,
-                        title: AppLocalizations.of(context)!.city),
+                        text: " ${user.state} - ${user.city}",
+                        title: AppLocalizations.of(context)!.state),
                   ],
                 ),
               ),
@@ -124,7 +124,8 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
         city: "${data.docs[0]["city"]}",
         major: "${data.docs[0]["major"]}",
         coverImagePath: "${data.docs[0]["cover image"]}",
-        profileImagePath: "${data.docs[0]["profile image"]}");
+        profileImagePath: "${data.docs[0]["profile image"]}",
+        state: "${data.docs[0]["state"]}");
   }
 
 //returns the Over lap of CoverImage and ProfileImage on the top of the screen

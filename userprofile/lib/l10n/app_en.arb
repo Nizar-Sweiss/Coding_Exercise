@@ -43,31 +43,44 @@
 
     "firstNameError": "Enter first name",
     "@firstNameError": {
-        "description": "User First Name"
+        "description": "Error message User First Name"
     },
     "lastNameError": "Enter last name ",
     "@lastNameError": {
-        "description": "User Last Name"
+        "description": "Error message User Last Name"
     },
     "ageError": "Enter valid number ",
     "@ageError": {
-        "description": "User age"
+        "description": "Error message User age"
     },
     "emailError": "Enter a valid E-mail",
     "@emailError": {
-        "description": "User Email"
+        "description": "Error messageUser Email"
     },
     "countryError": "Enter correct Text",
     "@countryError": {
-        "description": "The Country"
+        "description": "TError messagehe Country"
     },
     "cityError": "Enter correct Text",
     "@cityError": {
-        "description": "User First Name"
+        "description": "Error messageUser First Name"
     },
     "displayNameError": "Enter correct name",
     "@editInfoError": {
-        "description": "User display name"
+        "description": "Error messageUser display name"
+    },
+
+    "state": "State",
+    "@state": {
+        "description": "state of the country"
+    },
+     "major": "Major",
+    "@major": {
+        "description": "major of the user "
+    },
+    "majorError": "Enter correct Text",
+    "@majorError": {
+        "description": "Error message major of the user "
     }
 
    
