@@ -20,8 +20,15 @@ This section frameworks/libraries used to bootstrap the project.
 
 ## Tools used to manage the application:
 
-- Figma : for designing the interface
-- Trello : for manage projects and tasks
+<ul>
+  <li>Figma : for designing the interface <a href="https://www.figma.com/file/KUOmEs3nmjgTt01B9D9FfC/Untitled?t=SE5nIUNByzyvukE1-1">Check it out </a>
+  </li>
+  <li>Trello : for manage projects and tasks 
+  <a href="https://trello.com/b/hXtY6s2P/coding-exercise">Check ot out </a>
+  </li>
+</ul>
+ 
+
 
 ## Project Demo :
 
