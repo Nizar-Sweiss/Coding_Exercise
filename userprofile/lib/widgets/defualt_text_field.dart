@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../style/app_colors.dart';
+
 class DefaultFormField extends StatefulWidget {
   final String hint;
   final String title;
@@ -47,22 +49,22 @@ class _DefaultFormFieldState extends State<DefaultFormField> {
               decoration: InputDecoration(
                 // Setting the background color of the TextFormField.
                 filled: true,
-                fillColor: Color.fromARGB(255, 224, 224, 224),
+                fillColor: AppColors.light_blue_tint_2,
                 focusedErrorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(4),
                   borderSide: const BorderSide(
-                    color: Colors.black,
+                    color: AppColors.black_Text,
                     width: 1,
                   ),
                 ),
                 errorStyle: const TextStyle(
                   fontSize: 15,
-                  color: Color.fromARGB(255, 250, 0, 0),
+                  color: AppColors.red_error,
                 ),
                 errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(4),
                   borderSide: const BorderSide(
-                    color: Color.fromARGB(255, 255, 0, 0),
+                    color: AppColors.red_error,
                     width: 1.5,
                   ),
                 ),
@@ -77,7 +79,7 @@ class _DefaultFormFieldState extends State<DefaultFormField> {
                 // Setting the hint text and hint style.
                 hintText: widget.hint,
                 hintStyle: const TextStyle(
-                  color: Colors.black,
+                  color: AppColors.black_Text,
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
                 ),

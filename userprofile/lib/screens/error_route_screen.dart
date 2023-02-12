@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:userprofile/style/app_style.dart';
 
+import '../style/app_colors.dart';
+
 class ErrorRouteScreen extends StatelessWidget {
   const ErrorRouteScreen({
     Key? key,
@@ -12,7 +14,7 @@ class ErrorRouteScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Error Route"),
         elevation: 0,
-        backgroundColor: red_tint_1,
+        backgroundColor: AppColors.red_tint_1,
       ),
       body: Center(
         child: Column(
@@ -35,28 +37,28 @@ class ErrorRouteScreen extends StatelessWidget {
       onPressed: sendErrorMessageCode(),
       icon: const Icon(
         Icons.send,
-        color: light_blue_tint_2,
+        color: AppColors.light_blue_tint_2,
       ),
       label: const Text(
         "Send Error",
-        style: TextStyle(color: light_blue_tint_2),
+        style: TextStyle(color: AppColors.light_blue_tint_2),
       ),
       style: TextButton.styleFrom(
-        side: const BorderSide(width: 2, color: light_blue_tint_2),
+        side: const BorderSide(width: 2, color: AppColors.light_blue_tint_2),
       ),
     );
   }
 
   Text _errorRouteText() => const Text(
         "Route Does not exist,\nWould you like to submit this error?",
-        style: TextStyle(color: red_error),
+        style: TextStyle(color: AppColors.red_error),
       );
 
   Icon _errorRouteIcon() {
     return const Icon(
       Icons.error,
       size: 100,
-      color: light_blue_tint_2,
+      color: AppColors.light_blue_tint_2,
     );
   }
 }
