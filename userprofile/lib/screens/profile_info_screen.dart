@@ -15,8 +15,10 @@ class ProfileInfoScreen extends StatefulWidget {
 class _ProfileInfoScreen extends State<ProfileInfoScreen> {
   final double coverHeight = 150;
   final double profileHeight = 150;
-
   final Stream<QuerySnapshot> users = userCollection.snapshots();
+  late QuerySnapshot<Object?> data;
+  late User user;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,44 +27,43 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
         centerTitle: true,
       ),
       body: SafeArea(
-          child: StreamBuilder<QuerySnapshot>(
-        stream: users,
-        builder: (
-          BuildContext context,
-          AsyncSnapshot<QuerySnapshot> snapshot,
-        ) {
-          if (snapshot.hasError) {
-            return const Text("Something went Wrong ");
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Text("Loading ...");
-          }
+        child: StreamBuilder<QuerySnapshot>(
+          stream: users,
+          builder: (
+            BuildContext context,
+            AsyncSnapshot<QuerySnapshot> snapshot,
+          ) {
+            if (snapshot.hasError) {
+              return const Text("Something went Wrong ");
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Text("Loading ...");
+            }
 
-          final data = snapshot.requireData;
-          final user = fetchLocalUser(data);
+            data = snapshot.requireData;
+            user = fetchLocalUser();
 
-          return ListView(
-            children: [
-              buildTopContents(user),
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    userHeadLineInfo(user, context),
-                    userInfo(user, context),
-                  ],
-                ),
-              ),
-            ],
-          );
-        },
-      )),
+            return ListView(
+              children: [
+                _topScreenWidgets(),
+                _paddedUserInfo(),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Padding _paddedUserInfo() {
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: userInfo(),
     );
   }
 
   // returns a User Object of the fetched data from firebase to make local Object
-  User fetchLocalUser(QuerySnapshot<Object?> data) {
+  User fetchLocalUser() {
     return User(
         firstName: "${data.docs[0]["first name"]}",
         email: "${data.docs[0]["email"]}",
@@ -77,62 +78,21 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
         state: "${data.docs[0]["state"]}");
   }
 
-  // returns the Over lap of CoverImage and ProfileImage on the top of the screen
-  Widget buildTopContents(User user) {
-    final topPosition = coverHeight -
-        profileHeight /
-            2; //to position the profile image between the cover image and the contents info
-    final bottom = profileHeight / 2;
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        CoverImage(
-          coverImage: user.coverImagePath,
-        ),
-        Positioned(
-          right: 1,
-          bottom: 1,
-          child: IconButton(
-            style: IconButton.styleFrom(),
-            icon: const Icon(
-              Icons.edit,
-              size: 30,
-            ),
-            onPressed: () {
-              Navigator.pushNamed(
-                context,
-                "/editProfile",
-                arguments: user,
-              );
-            },
-          ),
-        ),
-        Positioned(
-          top: topPosition,
-          left: 10,
-          child: ProfileImage(
-            profileImage: user.profileImagePath,
-          ),
-        ),
-      ],
-    );
-  }
-
-  // User Head Line information (Display name and Major).
-  Column userHeadLineInfo(User user, BuildContext context) {
+  // returns the Over lap of CoverImage, ProfileImage
+  // and EditUserInfo_Icon on the top of the screen
+  Widget _topScreenWidgets() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          " ${user.displayName}",
-          style: Theme.of(context).textTheme.headline1,
+        Stack(
+          clipBehavior: Clip.none,
+          children: [
+            _coverImage(),
+            _positionedEditUserInfoIcon(),
+            _positionedProfileImage(),
+          ],
         ),
-        Text(
-          user.major,
-          style: Theme.of(context).textTheme.headline2,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
+        userHeadLine(),
         const Divider(
           thickness: 1,
         ),
@@ -140,26 +100,128 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
     );
   }
 
-  // returns column of the user information from firebase in a text Box
-  Column userInfo(User user, BuildContext context) {
+  CoverImage _coverImage() {
+    return CoverImage(
+      coverImage: user.coverImagePath,
+    );
+  }
+
+  Positioned _positionedProfileImage() {
+    // to position the profile image between
+    // the cover image and the contents info
+    final double topPosition = coverHeight - profileHeight / 2;
+
+    return Positioned(
+      top: topPosition,
+      left: 10,
+      child: _profileImage(),
+    );
+  }
+
+  ProfileImage _profileImage() {
+    return ProfileImage(
+      profileImage: user.profileImagePath,
+    );
+  }
+
+  Positioned _positionedEditUserInfoIcon() {
+    return Positioned(
+      right: 1,
+      bottom: 1,
+      child: _editUserInfoIcon(),
+    );
+  }
+
+  IconButton _editUserInfoIcon() {
+    return IconButton(
+      style: IconButton.styleFrom(),
+      icon: const Icon(
+        Icons.edit,
+        size: 30,
+      ),
+      onPressed: () {
+        navigateToEditProfileScreen();
+      },
+    );
+  }
+
+  void navigateToEditProfileScreen() {
+    Navigator.pushNamed(
+      context,
+      "/editProfile",
+      arguments: user,
+    );
+  }
+
+  /// User Head Line information (Display name and Major).
+  userHeadLine() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        DefaultTextBox(
-            text: user.firstName,
-            title: AppLocalizations.of(context)!.firstName),
-        DefaultTextBox(
-            text: user.lastName, title: AppLocalizations.of(context)!.lastName),
-        DefaultTextBox(
-            text: user.age.toString(),
-            title: AppLocalizations.of(context)!.age),
-        DefaultTextBox(
-            text: user.email, title: AppLocalizations.of(context)!.email),
-        DefaultTextBox(
-            text: user.country, title: AppLocalizations.of(context)!.country),
-        DefaultTextBox(
-            text: " ${user.state} - ${user.city}",
-            title: AppLocalizations.of(context)!.state),
+        _userNickNameHeadLine(),
+        _userMajorHeadLine(),
       ],
     );
+  }
+
+  Text _userMajorHeadLine() {
+    return Text(
+      user.major,
+      style: Theme.of(context).textTheme.headline2,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+
+  Text _userNickNameHeadLine() {
+    return Text(
+      user.displayName,
+      style: Theme.of(context).textTheme.headline1,
+    );
+  }
+
+  // returns column of the user information from firebase in a text Box
+  Column userInfo() {
+    return Column(
+      children: [
+        _firstNameTextBox(),
+        _lastNameTextBox(),
+        _ageTextBox(),
+        _emailTextBox(),
+        _countryTextBox(),
+        _stateTextBox(),
+      ],
+    );
+  }
+
+  DefaultTextBox _stateTextBox() {
+    return DefaultTextBox(
+        text: " ${user.state} - ${user.city}",
+        title: AppLocalizations.of(context)!.state);
+  }
+
+  DefaultTextBox _countryTextBox() {
+    return DefaultTextBox(
+        text: user.country, title: AppLocalizations.of(context)!.country);
+  }
+
+  DefaultTextBox _emailTextBox() {
+    return DefaultTextBox(
+        text: user.email, title: AppLocalizations.of(context)!.email);
+  }
+
+  DefaultTextBox _ageTextBox() {
+    return DefaultTextBox(
+        text: user.age.toString(), title: AppLocalizations.of(context)!.age);
+  }
+
+  DefaultTextBox _lastNameTextBox() {
+    return DefaultTextBox(
+        text: user.lastName, title: AppLocalizations.of(context)!.lastName);
+  }
+
+  DefaultTextBox _firstNameTextBox() {
+    return DefaultTextBox(
+        text: user.firstName, title: AppLocalizations.of(context)!.firstName);
   }
 }
