@@ -20,7 +20,7 @@ class RouteGenerator {
     switch (routeSettings.name) {
       case '/':
         return homePage();
-      case '/editPrsssofile':
+      case '/editProfile':
         return editProfileScreenPage();
       default:
         return _errorRoutePage();
