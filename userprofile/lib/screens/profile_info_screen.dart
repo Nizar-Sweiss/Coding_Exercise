@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:userprofile/models/user.dart';
 import 'package:userprofile/utility/firebase/firebase_service.dart';
 import 'package:userprofile/widgets/widgets_barrel.dart';
-
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 
 class ProfileInfoScreen extends StatefulWidget {
@@ -62,58 +61,14 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
     );
   }
 
-  //User Head Line information (Display name and Major).
-  Column userHeadLineInfo(User user, BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          " ${user.displayName}",
-          style: Theme.of(context).textTheme.headline1,
-        ),
-        Text(
-          user.major,
-          style: Theme.of(context).textTheme.headline2,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-        const Divider(
-          thickness: 1,
-        ),
-      ],
-    );
-  }
-
-//returns column of the user information from firebase in a text Box
-  Column userInfo(User user, BuildContext context) {
-    return Column(
-      children: [
-        DefaultTextBox(
-            text: user.firstName,
-            title: AppLocalizations.of(context)!.firstName),
-        DefaultTextBox(
-            text: user.lastName, title: AppLocalizations.of(context)!.lastName),
-        DefaultTextBox(
-            text: user.age, title: AppLocalizations.of(context)!.age),
-        DefaultTextBox(
-            text: user.email, title: AppLocalizations.of(context)!.email),
-        DefaultTextBox(
-            text: user.country, title: AppLocalizations.of(context)!.country),
-        DefaultTextBox(
-            text: " ${user.state} - ${user.city}",
-            title: AppLocalizations.of(context)!.state),
-      ],
-    );
-  }
-
-// returns a User Object of the fetched data from firebase to make local Object
+  // returns a User Object of the fetched data from firebase to make local Object
   User fetchLocalUser(QuerySnapshot<Object?> data) {
     return User(
         firstName: "${data.docs[0]["first name"]}",
         email: "${data.docs[0]["email"]}",
         lastName: "${data.docs[0]["last name "]}",
         displayName: " ${data.docs[0]["display name"]}",
-        age: "${data.docs[0]["age"]}",
+        age: data.docs[0]["age"],
         country: "${data.docs[0]["country"]}",
         city: "${data.docs[0]["city"]}",
         major: "${data.docs[0]["major"]}",
@@ -122,7 +77,7 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
         state: "${data.docs[0]["state"]}");
   }
 
-//returns the Over lap of CoverImage and ProfileImage on the top of the screen
+  // returns the Over lap of CoverImage and ProfileImage on the top of the screen
   Widget buildTopContents(User user) {
     final topPosition = coverHeight -
         profileHeight /
@@ -159,6 +114,51 @@ class _ProfileInfoScreen extends State<ProfileInfoScreen> {
             profileImage: user.profileImagePath,
           ),
         ),
+      ],
+    );
+  }
+
+  // User Head Line information (Display name and Major).
+  Column userHeadLineInfo(User user, BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          " ${user.displayName}",
+          style: Theme.of(context).textTheme.headline1,
+        ),
+        Text(
+          user.major,
+          style: Theme.of(context).textTheme.headline2,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        const Divider(
+          thickness: 1,
+        ),
+      ],
+    );
+  }
+
+  // returns column of the user information from firebase in a text Box
+  Column userInfo(User user, BuildContext context) {
+    return Column(
+      children: [
+        DefaultTextBox(
+            text: user.firstName,
+            title: AppLocalizations.of(context)!.firstName),
+        DefaultTextBox(
+            text: user.lastName, title: AppLocalizations.of(context)!.lastName),
+        DefaultTextBox(
+            text: user.age.toString(),
+            title: AppLocalizations.of(context)!.age),
+        DefaultTextBox(
+            text: user.email, title: AppLocalizations.of(context)!.email),
+        DefaultTextBox(
+            text: user.country, title: AppLocalizations.of(context)!.country),
+        DefaultTextBox(
+            text: " ${user.state} - ${user.city}",
+            title: AppLocalizations.of(context)!.state),
       ],
     );
   }

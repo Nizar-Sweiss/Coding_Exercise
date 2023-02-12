@@ -50,7 +50,7 @@ class _EditProfileScreen extends State<EditProfileScreen> {
     firstNameController.text = widget.userData.firstName;
     lastNameController.text = widget.userData.lastName;
     emailController.text = widget.userData.email;
-    ageController.text = widget.userData.age;
+    ageController.text = widget.userData.age.toString();
     countryController.text = widget.userData.country;
     cityController.text = widget.userData.city;
     majorController.text = widget.userData.major;
@@ -138,7 +138,7 @@ class _EditProfileScreen extends State<EditProfileScreen> {
 
   void updateUserData(DocumentReference<Map<String, dynamic>> docUser) {
     docUser.update({
-      'age': ageController.text.trim(),
+      'age': int.parse(ageController.text),
       'city': cityController.text,
       'country': countryController.text,
       'display name': displayNameController.text.trim(),

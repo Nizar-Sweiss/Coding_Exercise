@@ -4,7 +4,7 @@ class User {
   String lastName;
   String displayName;
   String email;
-  String age;
+  int age;
   String country;
   String city;
   String state;
