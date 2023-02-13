@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       scaffoldMessengerKey: Utils.messengerKey,
-      theme: appTheme(),
+      theme: appThemeLight(),
       supportedLocales: L10n.all,
       localizationsDelegates: L10n.localizationsDelegates,
       onGenerateRoute: RouteGenerator.generateRoute,
